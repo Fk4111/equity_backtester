@@ -50,16 +50,21 @@ def fetch_and_save_all_stocks(db: Session):
 
             # Download historical data
             hist = yf.download(
-                    symbol,
-                    period="5y",
-                    progress=False,
-                    auto_adjust=True,
-                    threads=False
-                )
-            print(f"\n=== {symbol} ===")
-            print(hist.head())
-            print(f"Rows: {len(hist)}")
-            print(f"Empty: {hist.empty}")
+            symbol,
+            period="5y",
+            progress=False,
+            auto_adjust=True,
+            threads=False
+            )
+
+            if hist.empty:
+                print(f"No price data found for {symbol}")
+                continue
+
+            if isinstance(hist.columns, pd.MultiIndex):
+                hist.columns = hist.columns.get_level_values(0)
+
+            print(hist.columns)
             
             
 
