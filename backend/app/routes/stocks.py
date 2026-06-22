@@ -35,7 +35,7 @@ def trigger_data_fetch(background_tasks: BackgroundTasks, db: Session = Depends(
     Triggers a background job to fetch all Indian stock data from Yahoo Finance.
     This can take several minutes - it runs in the background.
     """
-    background_tasks.add_task(fetch_and_save_all_stocks, db)
+    fetch_and_save_all_stocks(db)
     return {
         "message": "Data fetch started in the background. This will take a few minutes.",
         "note": "Check your terminal logs to see progress."
