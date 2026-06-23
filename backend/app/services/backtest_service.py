@@ -306,10 +306,10 @@ def run_backtest(db: Session, request: BacktestRequest):
     years = (request.end_date - request.start_date).days / 365.25
     equity_values = [point["value"] for point in equity_curve]
 
-    cagr = calculate_cagr(request.capital, portfolio_value, years)
-    total_return = calculate_total_return(request.capital, portfolio_value)
-    max_drawdown = calculate_max_drawdown(equity_values)
-    sharpe = calculate_sharpe_ratio(period_returns)
+    cagr = float(calculate_cagr(request.capital, portfolio_value, years))
+    total_return = float(calculate_total_return(request.capital, portfolio_value))
+    max_drawdown = float(calculate_max_drawdown(equity_values))
+    sharpe = float(calculate_sharpe_ratio(period_returns))
     drawdown_series = calculate_drawdown_series(equity_curve)
 
     # Step 7: Find top winners and losers
@@ -322,6 +322,17 @@ def run_backtest(db: Session, request: BacktestRequest):
     top_winners = [{"symbol": s, "return_percent": r} for s, r in sorted_returns[:5]]
     top_losers = [{"symbol": s, "return_percent": r} for s, r in sorted_returns[-5:]]
 
+    portfolio_value = float(portfolio_value)
+
+    print("TYPE CHECK")
+    print(type(portfolio_value))
+    print(type(cagr))
+    print(type(total_return))
+    print(type(sharpe))
+    print(type(max_drawdown))
+      
+
+        
     # Step 8: Save backtest to database
     backtest_record = Backtest(
         start_date=request.start_date,
@@ -352,6 +363,17 @@ def run_backtest(db: Session, request: BacktestRequest):
             return_percent=log["return_percent"],
         )
         db.add(log_record)
+        
+        print(type(portfolio_value))
+        print(type(cagr))
+        print(type(total_return))
+        print(type(sharpe))
+        print(type(max_drawdown))
+        print(portfolio_value)
+        print(cagr)
+        print(total_return)
+        print(sharpe)
+        print(max_drawdown)
 
     db.commit()
 
